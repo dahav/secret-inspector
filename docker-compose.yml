@@ -1,0 +1,32 @@
+services:
+  secret-inspector:
+    build:
+      context: .
+      target: production
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=file:/data/secret-inspector.db
+      - NODE_ENV=production
+    volumes:
+      - db-data:/data
+      - ~/.ssh/id_rsa:/root/.ssh/id_rsa:ro
+
+  dev:
+    build:
+      context: .
+      target: dev
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=file:/data/secret-inspector.db
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - db-data:/data
+      - ~/.ssh/id_rsa:/root/.ssh/id_rsa:ro
+    profiles:
+      - dev
+
+volumes:
+  db-data:
