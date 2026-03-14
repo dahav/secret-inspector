@@ -1,66 +1,66 @@
 # Secret Inspector
 
-Web-Applikation zur Erkennung, Bewertung und Nachverfolgung von exponierten Secrets in Git-Repositories. Scannt Source-Repos mit [gitleaks](https://github.com/gitleaks/gitleaks), reichert Findings mit Dist-Repo-Informationen an und bietet eine vollständige Audit-Oberfläche inkl. Risikobewertung und Reporting.
+Web application for detecting, assessing, and tracking exposed secrets in Git repositories. Scans source repos using [gitleaks](https://github.com/gitleaks/gitleaks), enriches findings with dist repo information, and provides a full audit interface including risk assessment and reporting.
 
 ## Features
 
-- **Secret-Erkennung** — Automatisierte Scans der Git-Historie mit gitleaks
-- **Multi-Repo-Support** — Source-Repos (Scan) und Dist-Repos (Enrichment) pro Projekt
-- **Enrichment** — Fundorte in Dist-Repos, Umgebungsvariablen, Codebase-Suche
-- **Risikobewertung** — Automatische W/S-Scores mit manueller Korrektur, Risiko = W x S
-- **Audit-Tabelle** — Inline-Bearbeitung von Status, Scores, Tickets und Nachweisen
-- **Rotation Report** — Gefilterte Ansicht: nur Secrets die in Dist-Repos deployed sind
-- **Excel-Export** — Kunden-Report und Rotation-Report als .xlsx
-- **Stabile IDs** — Findings behalten ihre IDs über Scans hinweg (IdMapping)
-- **SSH-Key-Verwaltung** — Zentrale Verwaltung von SSH-Keys für Repository-Zugriff
-- **Dark Mode** — Umschaltbar per Toggle in der Sidebar
-- **Live Scan-Fortschritt** — SSE-basierte Fortschrittsanzeige auf allen Projekt-Unterseiten, mit Abbruch-Möglichkeit
+- **Secret Detection** — Automated scans of Git history using gitleaks
+- **Multi-Repo Support** — Source repos (scan) and dist repos (enrichment) per project
+- **Enrichment** — Finding locations in dist repos, environment variables, codebase search
+- **Risk Assessment** — Automatic likelihood/severity scores with manual override, Risk = L x S
+- **Audit Table** — Inline editing of status, scores, tickets, and evidence
+- **Rotation Report** — Filtered view: only secrets deployed in dist repos
+- **Excel Export** — Customer report and rotation report as .xlsx
+- **Stable IDs** — Findings retain their IDs across scans (IdMapping)
+- **SSH Key Management** — Centralized management of SSH keys for repository access
+- **Dark Mode** — Toggleable via sidebar switch
+- **Live Scan Progress** — SSE-based progress display on all project subpages, with cancel support
 
-## Tech-Stack
+## Tech Stack
 
 - **Frontend:** Next.js 16, React 19, Tailwind CSS 4, shadcn/ui, SWR, Recharts
 - **Backend:** Next.js API Routes, Prisma (SQLite), ExcelJS
 - **Tools:** gitleaks, Git, OpenSSH
-- **Container:** Docker (alle Abhängigkeiten enthalten)
+- **Container:** Docker (all dependencies included)
 
-## Voraussetzungen
+## Prerequisites
 
-- Docker und Docker Compose
+- Docker and Docker Compose
 
-Keine weiteren Abhängigkeiten nötig — Node.js, gitleaks, Git und OpenSSH sind im Container enthalten.
+No other dependencies required — Node.js, gitleaks, Git, and OpenSSH are included in the container.
 
-## Verwendung
-
-```bash
-make              # Alle verfügbaren Befehle anzeigen
-make start        # Dev-Server starten (Hot Reload)
-make build        # Production-Image bauen
-make up           # Production-Container starten
-make down         # Container stoppen
-make logs         # Logs anzeigen
-make shell        # Shell im Container öffnen
-```
-
-### Datenbank
+## Usage
 
 ```bash
-make export-database                      # Backup nach ./backups/
-make import-database FILE=backups/xxx.db  # Backup importieren
+make              # Show all available commands
+make start        # Start dev server (hot reload)
+make build        # Build production image
+make up           # Start production container
+make down         # Stop container
+make logs         # Show logs
+make shell        # Open shell in container
 ```
 
-Die Datenbank-Migration wird automatisch beim Start ausgeführt.
+### Database
 
-## Umgebungsvariablen
+```bash
+make export-database                      # Backup to ./backups/
+make import-database FILE=backups/xxx.db  # Import backup
+```
 
-| Variable | Beschreibung | Default |
+Database migration runs automatically on startup.
+
+## Environment Variables
+
+| Variable | Description | Default |
 |----------|-------------|---------|
-| `DATABASE_URL` | SQLite-Datenbankpfad | `file:/data/secret-inspector.db` |
+| `DATABASE_URL` | SQLite database path | `file:/data/secret-inspector.db` |
 
 ## Workflow
 
-1. **Projekt anlegen** — Name und ID-Prefix vergeben
-2. **Repositories konfigurieren** — Source-Repos (werden gescannt) und Dist-Repos (für Enrichment) hinzufügen
-3. **SSH-Key hinterlegen** — Private Key für SSH-Repos hinterlegen (unter Einstellungen oder pro Projekt). Alternativ wird `~/.ssh/id_rsa` vom Host gemountet.
-4. **Scan starten** — Klont Repos, scannt mit gitleaks, reichert Findings an. Laufende Scans können jederzeit abgebrochen werden.
-5. **Audit** — Findings bewerten: Status setzen, Risiko anpassen, Tickets verknüpfen
-6. **Reports** — Rotation Report (Secrets in Dist-Repos) oder Kunden-Report exportieren
+1. **Create Project** — Assign name and ID prefix
+2. **Configure Repositories** — Add source repos (to be scanned) and dist repos (for enrichment)
+3. **Add SSH Key** — Provide private key for SSH repos (under Settings or per project). Alternatively, `~/.ssh/id_rsa` is mounted from the host.
+4. **Start Scan** — Clones repos, scans with gitleaks, enriches findings. Running scans can be cancelled at any time.
+5. **Audit** — Assess findings: set status, adjust risk, link tickets
+6. **Reports** — Export rotation report (secrets in dist repos) or customer report
